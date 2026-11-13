@@ -1,0 +1,30 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><title>Formación 13/11 · vídeos</title>
+<style>:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#061E3C;color:#EEF3F9;font:16px/1.45 "Segoe UI",Arial,sans-serif;padding:24px 16px}
+.ban{height:6px;border-radius:3px;margin-bottom:18px;background:linear-gradient(90deg,#004A98 0 72%,#CE0E2D 72% 86%,#FFA400 86%)}
+form{max-width:420px;margin:12vh auto 0;background:#0C2C54;border-radius:10px;padding:28px}h1{margin:0 0 6px;font-size:24px}p{margin:0 0 18px;color:#A8B9CF}
+label{display:block;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#FFA400;margin-bottom:6px}
+input{width:100%;padding:12px 14px;border-radius:8px;border:1px solid #23446E;background:#061E3C;color:#fff;font-size:17px}
+button{margin-top:14px;width:100%;padding:12px;border:0;border-radius:8px;background:#FFA400;color:#0B0E13;font-weight:700;font-size:16px;cursor:pointer}
+#msg{min-height:22px;margin-top:10px;font-size:14px;color:#FFB4B4}main{max-width:1100px;margin:0 auto}
+.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}.c{background:#0C2C54;border-radius:10px;padding:16px;min-width:0}
+.c h2{font-size:18px;margin:0 0 4px}.c p{font-size:14px;margin:0 0 12px}video{width:100%;border-radius:8px;background:#000;display:block}
+.c.v video{max-height:70vh;width:auto;max-width:100%;margin:0 auto}.c button{margin-top:0}.st{font-size:13px;color:#A8B9CF;margin-top:8px}a{color:#FFA400}</style></head><body>
+<form id="f"><div class="ban"></div><h1>Formación 13/11 · vídeos</h1><p>Página privada. Escribe la contraseña.</p>
+<label for="pw">Contraseña</label><input id="pw" type="password" autofocus required><button type="submit">Entrar</button><div id="msg"></div></form>
+<main id="m" hidden><div class="ban"></div><h1>Formación de IA del 13/11 · vídeos montados</h1><p>Pruebas de montaje y shorts. Pulsa «Ver» en cada uno: se descifra en tu navegador.</p><div class="g" id="g"></div></main>
+<script>
+const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));let K;
+const dec=b=>crypto.subtle.decrypt({name:'AES-GCM',iv:b.slice(0,12)},K,b.slice(12));
+document.getElementById('f').addEventListener('submit',async ev=>{ev.preventDefault();const msg=document.getElementById('msg');msg.textContent='Abriendo…';let L;
+ try{const man=await(await fetch('manifiesto.json',{cache:'no-store'})).json();
+  const base=await crypto.subtle.importKey('raw',new TextEncoder().encode(document.getElementById('pw').value),'PBKDF2',false,['deriveKey']);
+  K=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(man.sal),iterations:man.iter,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
+  L=JSON.parse(new TextDecoder().decode(await dec(b64(man.cat))));}catch(e){msg.textContent='Contraseña incorrecta.';return}
+ document.getElementById('f').hidden=true;document.getElementById('m').hidden=false;const g=document.getElementById('g');
+ L.forEach(v=>{const c=document.createElement('div');c.className='c '+v.o;c.innerHTML=`<h2>${v.t}</h2><p>${v.d}</p><button>Ver (${v.mb} MB)</button><div class="st"></div>`;g.append(c);
+  const bt=c.querySelector('button'),st=c.querySelector('.st');bt.onclick=async()=>{bt.disabled=true;st.textContent='Descargando y descifrando…';
+   try{const b=new Uint8Array(await(await fetch(v.f)).arrayBuffer());const u=URL.createObjectURL(new Blob([await dec(b)],{type:'video/mp4'}));
+    const vd=document.createElement('video');vd.controls=true;vd.playsInline=true;vd.src=u;bt.replaceWith(vd);
+    st.innerHTML=`<a href="${u}" download="${v.n}">Descargar ${v.n}</a>`;}catch(e){st.textContent='No se pudo abrir: '+e;bt.disabled=false}}});});
+</script></body></html>
